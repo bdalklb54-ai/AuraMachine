@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>AuraMask – Smart Luxury Skincare</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Tailwind CDN -->
+  <link rel="stylesheet" href="dist/output.css">
+</head>
+
+<body class="bg-dark text-white font-sans overflow-x-hidden">
+
+<!-- ================= NAVBAR ================= -->
+<header class="fixed top-0 w-full z-50 bg-dark/80 backdrop-blur border-b border-white/10">
+  <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+    <img src="images/logo.jpeg" class="h-8" alt="AuraMask">
+
+    <nav class="hidden md:flex gap-8 text-sm text-gray-300">
+      <a href="#device" class="hover:text-gold">الجهاز</a>
+      <a href="#capsules" class="hover:text-gold">الكبسولات</a>
+      <a href="#capsules" class="hover:text-gold">الأسعار</a>
+    </nav>
+
+    <!-- CART BUTTON -->
+    <button onclick="toggleCart()"
+      class="relative bg-gold text-black px-4 py-2 rounded-full font-semibold">
+      🛒 
+      <span id="cartCount"
+        class="absolute -top-2 -right-2 bg-black text-white text-xs px-2 rounded-full">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="pt-32 pb-24">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center px-6">
+
+    <div>
+      <h1 class="text-5xl font-bold leading-tight mb-6">
+        AuraMask
+        <span class="block text-gold text-3xl mt-3">
+          جهاز العناية بالبشرة الذكي
+        </span>
+      </h1>
+
+      <p class="text-gray-300 leading-relaxed mb-8">
+        AuraMask ليس مجرد جهاز، بل مختبر عناية بالبشرة منزلي.
+        يصنع لك قناع هيدروجيل طازج خلال 90 ثانية،
+        مخصص بالكامل لحالة بشرتك باستخدام الذكاء الاصطناعي.
+      </p>
+
+      <button onclick="goToPayment()" class="bg-gold text-black px-8 py-3 rounded-full font-semibold">
+        اشتري الآن – 999 AED
+      </button>
+    </div>
+
+    <!-- DEVICE SLIDER -->
+    <div class="relative">
+      <img id="deviceSlider"
+           src="images/black.png"
+           class="rounded-2xl shadow-2xl transition-opacity duration-700">
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= DEVICE ================= -->
+<section id="device" class="py-24 bg-black">
+  <div class="max-w-6xl mx-auto px-6">
+    <h2 class="text-4xl font-bold mb-10 text-center">جهاز AuraMask</h2>
+
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <img src="images/white.jpg" class="rounded-2xl">
+
+      <div class="text-gray-300 leading-loose space-y-4">
+        <p>
+          جهاز <span class="text-gold font-semibold">AuraMask</span> هو مختبر عناية بالبشرة منزلي
+          يجمع بين التصميم الفاخر والتكنولوجيا المتقدمة.
+        </p>
+        <p>
+          يقوم بتسخين أو تبريد المكونات، خلط الكبسولات بدقة،
+          ثم تشكيل قناع هيدروجيل طازج خلال أقل من
+          <span class="text-gold">90 ثانية</span>.
+        </p>
+        <p>
+          القناع الناتج دافئ أو بارد حسب الإعداد،
+          مما يساعد على فتح المسام وتعزيز الامتصاص.
+        </p>
+        <p>
+          مع التطبيق الذكي، يتم تخصيص كل قناع حسب حالة بشرتك والبيئة اليومية.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CAPSULES ================= -->
+<section id="capsules" class="py-24">
+  <div class="max-w-7xl mx-auto px-6">
+    <h2 class="text-4xl font-bold text-center mb-16">كبسولات AuraMask</h2>
+
+    <div class="grid md:grid-cols-3 gap-10">
+
+      <!-- 20 CAPSULES -->
+      <div class="bg-black border border-white/10 p-8 rounded-2xl text-center">
+        <img src="images/bigbox.jpg" class="rounded-xl mb-6">
+        <p class="text-gray-400 mb-2">20 كبسولة</p>
+        <p class="text-gold text-2xl font-bold mb-4">199 AED</p>
+        <button onclick="addToCart('AuraMask Capsules – 20',199,'images/bigbox.jpg')"
+          class="bg-gold text-black px-6 py-2 rounded-full">
+          أضف إلى السلة
+        </button>
+      </div>
+
+      <!-- 10 CAPSULES -->
+      <div class="bg-black border border-white/10 p-8 rounded-2xl text-center">
+        <img src="images/smallbox.jpg" class="rounded-xl mb-6">
+        <p class="text-gray-400 mb-2">10 كبسولات</p>
+        <p class="text-gold text-2xl font-bold mb-4">120 AED</p>
+        <button onclick="addToCart('AuraMask Capsules – 10',120,'images/smallbox.jpg')"
+          class="bg-gold text-black px-6 py-2 rounded-full">
+          أضف إلى السلة
+        </button>
+      </div>
+
+      <!-- 7 CAPSULES -->
+      <div class="bg-black border border-white/10 p-8 rounded-2xl text-center">
+        <img src="images/labledcapsule.jpg" class="rounded-xl mb-6">
+        <p class="text-gray-400 mb-2">7 كبسولات</p>
+        <p class="text-gold text-2xl font-bold mb-4">100 AED</p>
+        <button onclick="addToCart('AuraMask Capsules – 7',100,'images/labledcapsule.jpg')"
+          class="bg-gold text-black px-6 py-2 rounded-full">
+          أضف إلى السلة
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRICING ================= -->
+<section id="pricing" class="py-24 bg-black text-center">
+  <p class="text-gold text-5xl font-bold mb-4">AuraMask</p>
+  <p class="text-gray-400">تجربة سبا منزلية فاخرة</p>
+</section>
+
+<!-- ================= CART MODAL ================= -->
+<div id="cartModal"
+  class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
+  <div class="bg-dark border border-white/10 w-full max-w-md p-6 rounded-2xl">
+
+    <h3 class="text-2xl font-bold mb-6"> سلة المشتريات</h3>
+
+    <div id="cartItems" class="space-y-4 mb-6"></div>
+
+    <div class="flex justify-between text-lg font-semibold mb-6">
+      <span>الإجمالي</span>
+      <span id="cartTotal" class="text-gold">0 AED</span>
+    </div>
+
+    <button onclick="goToPayment()" class="w-full bg-gold text-black py-3 rounded-full font-semibold mb-2">
+      ادفع الآن
+    </button>
+
+    <button onclick="toggleCart()" class="w-full text-gray-400 text-sm">
+      إغلاق
+    </button>
+  </div>
+</div>
+
+<!-- ================= FOOTER ================= -->
+<footer class="py-10 border-t border-white/10 text-center text-gray-500 text-sm">
+  © 2025 AuraMask. All rights reserved.
+</footer>
+
+<!-- ================= SCRIPTS ================= -->
+<script>
+  /* Device Slider */
+  const deviceImages = ['images/black.png', 'images/white.jpg'];
+  let deviceIndex = 0;
+  const slider = document.getElementById('deviceSlider');
+
+  setInterval(() => {
+    slider.style.opacity = 0;
+    setTimeout(() => {
+      deviceIndex = (deviceIndex + 1) % deviceImages.length;
+      slider.src = deviceImages[deviceIndex];
+      slider.style.opacity = 1;
+    }, 400);
+  }, 3000);
+
+  /* Cart Logic */
+  let cart = [];
+
+  const cartModal = document.getElementById('cartModal');
+  const cartItems = document.getElementById('cartItems');
+  const cartTotal = document.getElementById('cartTotal');
+  const cartCount = document.getElementById('cartCount');
+
+  function toggleCart() {
+    cartModal.classList.toggle('hidden');
+    cartModal.classList.toggle('flex');
+  }
+
+  function addToCart(name, price, image) {
+    cart.push({ name, price, image });
+    updateCart();
+  }
+
+  function updateCart() {
+    cartItems.innerHTML = '';
+    let total = 0;
+
+    cart.forEach(item => {
+      total += item.price;
+      cartItems.innerHTML += `
+        <div class="flex items-center gap-4 border-b border-white/10 pb-3">
+          <img src="${item.image}" class="w-14 h-14 rounded-lg object-cover">
+          <div class="flex-1">
+            <p class="font-semibold">${item.name}</p>
+            <p class="text-gold text-sm">${item.price} AED</p>
+          </div>
+        </div>
+      `;
+    });
+
+    cartTotal.textContent = total + ' AED';
+    cartCount.textContent = cart.length;
+  }
+
+  function goToPayment() {
+  localStorage.setItem('cart', JSON.stringify(cart));
+
+  // Calculate total
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  localStorage.setItem('total', total);
+
+  window.location.href = 'payment.html';
+}
+
+</script>
+
+</body>
+</html>

